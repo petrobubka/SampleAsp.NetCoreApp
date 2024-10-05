@@ -6,6 +6,7 @@
 trigger:
 - main
 
+
 pool:
   name: webapppool
 
@@ -21,3 +22,9 @@ steps:
   inputs:
     azureSubscription: 'app1'
     command: 'build'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'

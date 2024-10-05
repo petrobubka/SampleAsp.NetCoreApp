@@ -25,6 +25,6 @@ steps:
 
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    PathtoPublish: '/home/vzamy_1/myagent/_work/1/s'
     ArtifactName: 'drop'
     publishLocation: 'Container'

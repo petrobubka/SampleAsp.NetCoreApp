@@ -40,6 +40,9 @@ jobs:
   deploy:
     runs-on: self-hosted
     needs: build
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: Download a Build Artifact
         uses: actions/download-artifact@v4.1.8

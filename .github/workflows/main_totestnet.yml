@@ -37,3 +37,34 @@ jobs:
         with:
           name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
+  deploy:
+    runs-on: self-hosted
+    needs: build
+    steps:
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v4.1.8
+        with:
+          # Name of the artifact to download. If unspecified, all artifacts for the run are downloaded.
+          name: .net-app
+          # Destination path. Supports basic tilde expansion. Defaults to $GITHUB_WORKSPACE
+      - name: Azure Login
+        uses: Azure/login@v2.2.0
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_CC84F237F75747EB8F369B414C02EB07 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_C509B88B2FAB4FFD9A4D51DE508E645D }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_96246D94C0654ECA84021E92AF7099EA }}
+                    
+      - name: Azure WebApp
+        uses: Azure/webapps-deploy@v3.0.1
+        with:
+          # Name of the Azure Web App
+          app-name: appsample
+          # Applies to Web Apps(Windows and Linux) and Web App Containers(linux). Multi container scenario not supported. Publish profile (*.publishsettings) file contents with Web Deploy secrets
+          #publish-profile: # optional
+          # Enter an existing Slot other than the Production slot
+         # slot-name: # optional, default is production
+          # Applies to Web App only: Path to package or folder. *.zip, *.war, *.jar or a folder to deploy
+         # package: # optional, default is .
+          # Applies to Web App Containers only: Specify the fully qualified container image(s) name. For example, 'myregistry.azurecr.io/nginx:latest' or 'python:3.7.2-alpine/'. For multi-container scenario multiple container image names can be provided (multi-line separated)
+      #    images: # optional
+          # Applies to Web App Containers only: Path of the Docker-Compose file. Should be a fully qualified path or relative to the default working directory. Required for multi-container scenario

@@ -60,25 +60,29 @@ jobs:
           slot-name: 'Production'
           package: .
 
-      # Health Check
+      # Health Check with Bash Shell
       - name: Health Check
+        shell: bash
         run: |
-          response=$(curl -o /dev/null -s -w "%{http_code}" "${{ steps.deploy-to-webapp.outputs.webapp-url }}")
+          response=$(curl -o /dev/null -s -w "%{http_code}" "https://dfsdfdf-fdend5cmcabpayeu.canadacentral-01.azurewebsites.net")
           if [ "$response" -ne 200 ]; then
-            echo "Health check failed"
+            echo "Health check failed with response code $response"
             exit 1
+          else
+            echo "Health check passed with response code $response"
           fi
-        continue-on-error: false
 
-      # Rollback Mechanism
+      # Rollback Mechanism with Bash Shell
       - name: Rollback to Previous Version (if health check fails)
-        if: failure()
+        if: failure() # Only runs if the health check fails
+        shell: bash
         run: |
           echo "Rollback to previous version triggered"
-      
-      # Notification
+
+      # Notification Step with Bash Shell
       - name: Notify Deployment Status
         if: success() || failure()
+        shell: bash
         run: |
           if [ "${{ job.status }}" == "success" ]; then
             echo "Deployment succeeded"
